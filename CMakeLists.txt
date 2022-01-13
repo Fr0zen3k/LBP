@@ -8,6 +8,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/LBP/src")
 
+set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/LBP/vendor/opencv/build/x64/vc15/lib")
+find_package(OpenCV REQUIRED PATHS "${CMAKE_CURRENT_SOURCE_DIR}/LBP/vendor/opencv/build")
+
 set(
 	LBP_FILES
 	"${LBP_SOURCE_FILES}"
@@ -17,6 +20,8 @@ set(
 
 add_executable(LBP "${LBP_FILES}")
 
-target_include_directories(LBP PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/LBP/src")
+target_include_directories(LBP PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/LBP/src" "${OpenCV_INCLUDE_DIRS}")
 
 target_compile_definitions(LBP PUBLIC _USE_MATH_DEFINES)
+
+target_link_libraries(LBP ${OpenCV_LIBS})
