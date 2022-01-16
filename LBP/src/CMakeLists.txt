@@ -12,5 +12,6 @@ set(
 	"${CMAKE_CURRENT_SOURCE_DIR}/Frame.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Perceptron.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Segmentation.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../vendor/STBI/stb_image.h"
 	CACHE INTERNAL "" FORCE
 )

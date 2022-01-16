@@ -8,16 +8,17 @@
 #include "Perceptron.h"
 #include <opencv2/opencv.hpp>
 
+#include "Frame.h"
+
 class Segmentation {
 public:
     Segmentation(const Perceptron& p);
     virtual ~Segmentation();
 
-    cv::Mat ProcessFrame(cv::Mat LBP);
+    void ProcessFrame(Frame& frame);
 
 private:
     Perceptron m_Perceptron;
-    std::vector<std::pair<int, int>> m_IncludedSegments;
 
 };
 

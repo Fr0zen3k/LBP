@@ -8,6 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/LBP/src")
 
+set(HAVE_FFMPEG 1)
 set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/LBP/vendor/opencv/build/x64/vc15/lib")
 find_package(OpenCV REQUIRED PATHS "${CMAKE_CURRENT_SOURCE_DIR}/LBP/vendor/opencv/build")
 
@@ -20,8 +21,8 @@ set(
 
 add_executable(LBP "${LBP_FILES}")
 
-target_include_directories(LBP PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/LBP/src" "${OpenCV_INCLUDE_DIRS}")
+target_include_directories(LBP PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/LBP/src" "${OpenCV_INCLUDE_DIRS}" "${CMAKE_CURRENT_SOURCE_DIR}/LBP/vendor/STBI")
 
-target_compile_definitions(LBP PUBLIC _USE_MATH_DEFINES)
+target_compile_definitions(LBP PUBLIC _USE_MATH_DEFINES STB_IMAGE_IMPLEMENTATION)
 
 target_link_libraries(LBP ${OpenCV_LIBS})

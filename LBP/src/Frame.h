@@ -7,22 +7,26 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <vector>
+#include <array>
+
 class Frame {
 public:
-    Frame(cv::Mat data);
+    Frame() = default;
+    Frame(const cv::Mat& data);
     virtual ~Frame();
 
-    void LoadNext(cv::Mat data);
-    void Show();
-    void RGBtoGrayscale();
-    void GrayscaleToLBP();
+    void LoadNext(const cv::Mat& data);
+    void SetAveragePosition(int x, int y) const;
+    void Show(const std::string& window);
+    void ConvertToLBP();
 
-    cv::Mat GetFrameData();
+    [[nodiscard]] inline cv::Mat GetFrameData() const { return m_FrameData; }
+    [[nodiscard]] inline std::vector<uint8_t> GetLBPData() const { return m_LBP; }
 
 private:
     cv::Mat m_FrameData;
-    cv::Mat m_Grayscale;
-    cv::Mat m_LBP;
+    std::vector<uint8_t> m_LBP;
 };
 
 
