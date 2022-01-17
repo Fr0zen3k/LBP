@@ -5,8 +5,10 @@
 #include "Perceptron.h"
 
 #include <random>
+#include <iostream>
 
 const double Perceptron::LEARNING_RATE = 1.0;
+const uint32_t Perceptron::MAX_EPOCH_COUNT = 500;
 
 Perceptron::Perceptron() {
     std::random_device rd;
@@ -29,7 +31,9 @@ Perceptron::~Perceptron() {
 void Perceptron::Train(const std::vector<std::array<double, 257>> &x, const std::vector<bool> &y) {
     size_t correct = 0;
 
-    while(correct != y.size()) {
+    for(uint32_t epochs = 0; correct != y.size() && epochs < MAX_EPOCH_COUNT; epochs++) {
+        correct = 0;
+
         for(size_t i = 0; i < x.size(); i++) {
             std::array<double, 257> currentX = x[i];
 
@@ -56,7 +60,12 @@ void Perceptron::Train(const std::vector<std::array<double, 257>> &x, const std:
                     m_Weights[j] += currentX[j];
                 }
             }
+            else {
+                correct++;
+            }
         }
+
+        std::cout << "Epoch No. " << epochs + 1 << ". Correct classification percentage: " << 100.0 * correct / y.size() << "%" << std::endl;
     }
 }
 

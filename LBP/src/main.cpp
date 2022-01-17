@@ -246,8 +246,14 @@ int main(int argc, char *argv[]) {
                 std::string path = "./";
                 path.append(input);
 
-                unsigned char* frame = stbi_load(path.append(framePath).c_str(), &width, &height, &comp, STBI_rgb);
-                unsigned char* annotations = stbi_load(path.append(labelPath).c_str(), &width, &height, &comp, STBI_rgb);
+                std::string fPath(path);
+                fPath.append(framePath);
+
+                std::string lPath(path);
+                lPath.append("/").append(labelPath);
+
+                unsigned char* frame = stbi_load(fPath.c_str(), &width, &height, &comp, STBI_rgb);
+                unsigned char* annotations = stbi_load(lPath.c_str(), &width, &height, &comp, STBI_rgb);
 
                 // Convert to LBP
                 std::vector<uint8_t> lbp = RGBtoLBP(frame, width, height);
@@ -302,7 +308,7 @@ int main(int argc, char *argv[]) {
         // Write the weights to weights.config file in the directory of the executable
         std::string execPath = argv[0];
 
-        while(execPath[execPath.size() - 1] != '/' || execPath[execPath.size() - 1] != '\\') {
+        while(execPath[execPath.size() - 1] != '/' && execPath[execPath.size() - 1] != '\\') {
             execPath.pop_back();
         }
 
@@ -340,24 +346,26 @@ int main(int argc, char *argv[]) {
         // Load Perceptron from weights.config
         std::string execPath = argv[0];
 
-        while(execPath[execPath.size() - 1] != '/' || execPath[execPath.size() - 1] != '\\') {
+        while(execPath[execPath.size() - 1] != '/' && execPath[execPath.size() - 1] != '\\') {
             execPath.pop_back();
         }
 
         std::ifstream config(execPath + "weights.config");
 
-        if(!config) {
-            std::cout << "Failed to open a config file!" << std::endl;
-            return -1;
-        }
-
         std::array<double, 257> weights = {0.0};
 
-        for(double& weight : weights) {
-            config >> weight;
-        }
+        Perceptron perceptron;
 
-        Perceptron perceptron(weights);
+        if(!config) {
+            std::cout << "Failed to open the perceptron config file!" << std::endl;
+        }
+        else {
+            for(double& weight : weights) {
+                config >> weight;
+            }
+
+            perceptron = Perceptron(weights);
+        }
 
         // Create segmentation using perceptron
         Segmentation segmentation(perceptron);

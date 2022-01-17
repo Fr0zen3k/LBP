@@ -22,6 +22,7 @@ public:
 private:
     std::array<double, 257> m_Weights;
     static const double LEARNING_RATE;
+    static const uint32_t MAX_EPOCH_COUNT;
 };
 
 
