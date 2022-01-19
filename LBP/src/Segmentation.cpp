@@ -21,16 +21,16 @@ void Segmentation::ProcessFrame(Frame &frame) {
     std::vector<bool> marked;
 
     for(int i = 0; i < xPasses; i++) {
-        for(int j=0; j < yPasses; j++) {
+        for(int j = 0; j < yPasses; j++) {
             std::array<double, 257> featureVector = {0.0};
 
             for(int x = i * 32; x < i * 32 + 32; x++) {
-                for(int y = j * 32; y < j * 32 + 1; y++) {
+                for(int y = j * 32; y < j * 32 + 32; y++) {
                     if(x >= width || y >= height) {
                         continue;
                     }
 
-                    featureVector[lbp[x * width + y]] += 1.0;
+                    featureVector[lbp[y * width + x]] += 1.0;
                 }
             }
 
@@ -50,7 +50,7 @@ void Segmentation::ProcessFrame(Frame &frame) {
 
             if(!m_Perceptron.Predict(featureVector)) {
                 for(int x = i * 32; x < i * 32 + 32; x++) {
-                    for(int y = j * 32; y < j * 32 + 1; y++) {
+                    for(int y = j * 32; y < j * 32 + 32; y++) {
                         if(x >= width || y >= height) {
                             continue;
                         }
@@ -77,7 +77,7 @@ void Segmentation::ProcessFrame(Frame &frame) {
 
             if(marked[i * xPasses + j]) {
                 for(int x = i * 32; x < i * 32 + 32; x++) {
-                    for(int y = j * 32; y < j * 32 + 1; y++) {
+                    for(int y = j * 32; y < j * 32 + 32; y++) {
                         if(x >= width || y >= height) {
                             continue;
                         }
@@ -92,8 +92,10 @@ void Segmentation::ProcessFrame(Frame &frame) {
         }
     }
 
-    xAvg /= count;
-    yAvg /= count;
+    if(count > 0) {
+        xAvg /= count;
+        yAvg /= count;
 
-    frame.SetAveragePosition(xAvg, yAvg);
+        frame.SetAveragePosition(xAvg, yAvg);
+    }
 }
